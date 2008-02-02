@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>content</key>
+	<string>def create
+  @${1:thing} = ${2:Thing}.new(params[:$1])
+
+  respond_to do |format|
+    if @$1.save
+      flash[:notice] = '$1 was successfully created.'
+      format.html { redirect_to(@$1) }
+      format.xml  { render :xml =&gt; @$1, :status =&gt; :created, :location =&gt; @$1 }
+    else
+      format.html { render :action =&gt; "new" }
+      format.xml  { render :xml =&gt; @$1.errors, :status =&gt; :unprocessable_entity }
+    end
+end</string>
+	<key>name</key>
+	<string>create action</string>
+	<key>scope</key>
+	<string>source.ruby.rails, source.ruby</string>
+	<key>tabTrigger</key>
+	<string>create</string>
+	<key>uuid</key>
+	<string>BF377121-ED78-418D-9055-2C768C5817B6</string>
+</dict>
+</plist>
