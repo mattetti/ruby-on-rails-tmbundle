@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>content</key>
+	<string>def update
+  @${1:thing} = ${2:Thing}.find(params[:id])
+
+  respond_to do |format|
+    if @$1.update_attributes(params[:$1])
+      flash[:notice] = '$1 successfully updated.'
+      format.html { redirect_to($1) }
+      # format.xml  { head :ok }
+    else
+      format.html { render :action =&gt; "edit" }
+      # format.xml  { render :xml =&gt; @$1.errors, :status =&gt; :unprocessable_entity }
+    end
+  end
+end</string>
+	<key>name</key>
+	<string>rest update action</string>
+	<key>scope</key>
+	<string>source.ruby.rails, source.ruby</string>
+	<key>tabTrigger</key>
+	<string>update</string>
+	<key>uuid</key>
+	<string>3A401275-9D5B-4047-ABFB-BBD1889AA569</string>
+</dict>
+</plist>
