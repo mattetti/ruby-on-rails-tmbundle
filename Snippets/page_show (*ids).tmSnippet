@@ -3,14 +3,14 @@
 <plist version="1.0">
 <dict>
 	<key>content</key>
-	<string>rename_column :${1:column}, :${2:new_column}</string>
+	<string>page.show ${1:"${2:id(s)}"}</string>
 	<key>name</key>
-	<string>Rename Column</string>
+	<string>page.show (*ids)</string>
 	<key>scope</key>
-	<string>source.ruby.rails</string>
+	<string>source.ruby</string>
 	<key>tabTrigger</key>
-	<string>mcol</string>
+	<string>rjs</string>
 	<key>uuid</key>
-	<string>86DD56A8-C655-49DA-997B-8929E5D9407E</string>
+	<string>5ACBF49D-B5A5-495C-89D8-18AA740D9D02</string>
 </dict>
 </plist>

@@ -33,7 +33,7 @@ protected
   alias backtracer_original_template_path_for_local_rescue template_path_for_local_rescue
   def template_path_for_local_rescue(exception)
     if ActionView::TemplateError === exception
-      File.dirname(__FILE__) + "/../templates/rescues/template_error.rhtml"
+      File.dirname(__FILE__) + "/../templates/rescues/template_error.erb"
     else
       backtracer_original_template_path_for_local_rescue(exception)
     end

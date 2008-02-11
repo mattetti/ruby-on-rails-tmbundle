@@ -5,8 +5,7 @@
 	<key>content</key>
 	<string>respond_to do |format|
 	$0
-end
-</string>
+end</string>
 	<key>name</key>
 	<string>respond_to</string>
 	<key>scope</key>

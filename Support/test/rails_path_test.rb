@@ -5,7 +5,7 @@ require 'rails/rails_path'
 
 TextMate.line_number = '1'
 TextMate.column_number = '1'
-TextMate.project_directory = File.dirname(__FILE__) + '/fixtures'
+TextMate.project_directory = File.expand_path(File.dirname(__FILE__) + '/app_fixtures')
 
 class RailsPathTest < Test::Unit::TestCase
   def setup
@@ -13,10 +13,11 @@ class RailsPathTest < Test::Unit::TestCase
     @rp_controller_with_module = RailsPath.new(FIXTURE_PATH + '/app/controllers/admin/base_controller.rb')
     @rp_view = RailsPath.new(FIXTURE_PATH + '/app/views/user/new.rhtml')
     @rp_view_with_module = RailsPath.new(FIXTURE_PATH + '/app/views/admin/base/action.rhtml')
+    @rp_fixture = RailsPath.new(FIXTURE_PATH + '/test/fixtures/users.yml')
   end
   
   def test_rails_root
-    assert_equal File.dirname(__FILE__) + '/fixtures', RailsPath.new.rails_root
+    assert_equal File.expand_path(File.dirname(__FILE__) + '/app_fixtures'), RailsPath.new.rails_root
   end
   
   def test_extension
@@ -27,6 +28,7 @@ class RailsPathTest < Test::Unit::TestCase
   def test_file_type
     assert_equal :controller, @rp_controller.file_type
     assert_equal :view, @rp_view.file_type
+    assert_equal :fixture, @rp_fixture.file_type
   end
   
   def test_modules
@@ -65,12 +67,19 @@ class RailsPathTest < Test::Unit::TestCase
       [FIXTURE_PATH + '/app/controllers/user_controller.rb', :javascript, FIXTURE_PATH + '/public/javascripts/user.js'],
       [FIXTURE_PATH + '/app/controllers/user_controller.rb', :functional_test, FIXTURE_PATH + '/test/functional/user_controller_test.rb'],
       [FIXTURE_PATH + '/app/helpers/user_helper.rb', :controller, FIXTURE_PATH + '/app/controllers/user_controller.rb'],
+      [FIXTURE_PATH + '/app/models/user.rb', :controller, FIXTURE_PATH + '/app/controllers/user_controller.rb'],
+      [FIXTURE_PATH + '/app/models/post.rb', :controller, FIXTURE_PATH + '/app/controllers/posts_controller.rb'],
+      [FIXTURE_PATH + '/test/fixtures/users.yml', :model, FIXTURE_PATH + '/app/models/user.rb'],
+      [FIXTURE_PATH + '/app/controllers/user_controller.rb', :model, FIXTURE_PATH + '/app/models/user.rb'],
+      [FIXTURE_PATH + '/test/fixtures/users.yml', :unit_test, FIXTURE_PATH + '/test/unit/user_test.rb'],
+      [FIXTURE_PATH + '/app/models/user.rb', :fixture, FIXTURE_PATH + '/test/fixtures/users.yml'],
       # With modules
       [FIXTURE_PATH + '/app/controllers/admin/base_controller.rb', :helper, FIXTURE_PATH + '/app/helpers/admin/base_helper.rb'],
       [FIXTURE_PATH + '/app/controllers/admin/inside/outside_controller.rb', :javascript, FIXTURE_PATH + '/public/javascripts/admin/inside/outside.js'],
       [FIXTURE_PATH + '/app/controllers/admin/base_controller.rb', :functional_test, FIXTURE_PATH + '/test/functional/admin/base_controller_test.rb'],
       [FIXTURE_PATH + '/app/helpers/admin/base_helper.rb', :controller, FIXTURE_PATH + '/app/controllers/admin/base_controller.rb']
     ]
+    # TODO Add [posts.yml, :model, post.rb]
     for pair in partners
       assert_equal RailsPath.new(pair[2]), RailsPath.new(pair[0]).rails_path_for(pair[1])
     end
@@ -78,14 +87,14 @@ class RailsPathTest < Test::Unit::TestCase
     # Test controller to view
     TextMate.line_number = '6'
     current_file = RailsPath.new(FIXTURE_PATH + '/app/controllers/user_controller.rb')
-    assert_equal RailsPath.new(FIXTURE_PATH + '/app/views/user/create.rhtml'), current_file.rails_path_for(:view)
+    assert_equal RailsPath.new(FIXTURE_PATH + '/app/views/user/create.html.erb'), current_file.rails_path_for(:view)
 
     TextMate.line_number = '3'
     current_file = RailsPath.new(FIXTURE_PATH + '/app/controllers/user_controller.rb')
-    assert_equal RailsPath.new(FIXTURE_PATH + '/app/views/user/new.rhtml'), current_file.rails_path_for(:view)
+    assert_equal RailsPath.new(FIXTURE_PATH + '/app/views/user/new.html.erb'), current_file.rails_path_for(:view)
     
     # Test view to controller
-    current_file = RailsPath.new(FIXTURE_PATH + '/app/views/user/new.rhtml')
+    current_file = RailsPath.new(FIXTURE_PATH + '/app/views/user/new.html.erb')
     assert_equal RailsPath.new(FIXTURE_PATH + '/app/controllers/user_controller.rb'), current_file.rails_path_for(:controller)
   end
 end

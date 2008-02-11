@@ -4,6 +4,7 @@
 <dict>
 	<key>fileTypes</key>
 	<array>
+		<string>rb</string>
 		<string>rxml</string>
 		<string>builder</string>
 	</array>
@@ -153,6 +154,48 @@
 		</dict>
 		<dict>
 			<key>begin</key>
+			<string>(^\s*)(?=class\s+.+ActiveRecord::Migration)</string>
+			<key>comment</key>
+			<string>Uses lookahead to match classes that (may) inherit from ActiveRecord::Migration; includes 'source.ruby' to avoid infinite recursion</string>
+			<key>end</key>
+			<string>^\1(?=end)\b</string>
+			<key>name</key>
+			<string>meta.rails.migration</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>begin</key>
+					<string>(^\s*)(?=create_table)\b</string>
+					<key>comment</key>
+					<string>Uses lookahead to match methods create_table; includes 'source.ruby' to avoid infinite recursion</string>
+					<key>contentName</key>
+					<string>meta.rails.migration.create_table</string>
+					<key>end</key>
+					<string>^\1(?=end)\b</string>
+					<key>patterns</key>
+					<array>
+						<dict>
+							<key>include</key>
+							<string>source.ruby</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>$self</string>
+						</dict>
+					</array>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>source.ruby</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>$self</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>begin</key>
 			<string>(^\s*)(?=class\s+(?![.a-zA-Z0-9_:]+ControllerTest)(([.a-zA-Z0-9_:]+Test(\s*&lt;\s*[.a-zA-Z0-9_:]+)?)|(&lt;&lt;\s*[.a-zA-Z0-9_:]+)))</string>
 			<key>comment</key>
 			<string>Uses lookahead to match classes with the Test suffix; includes 'source.ruby' to avoid infinite recursion</string>
@@ -186,7 +229,7 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\b(cattr_accessor|mattr_accessor)\b</string>
+			<string>\b(alias_method_chain|alias_attribute|delegate|cattr_accessor|mattr_accessor)\b</string>
 			<key>name</key>
 			<string>support.function.activesupport.rails</string>
 		</dict>

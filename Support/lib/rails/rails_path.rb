@@ -8,6 +8,7 @@
 require 'rails/misc'
 require 'rails/text_mate'
 require 'rails/buffer'
+require 'rails/inflector'
 
 module AssociationMessages
   # Return associated_with_*? methods
@@ -25,7 +26,7 @@ module AssociationMessages
     :helper => [:controller, :unit_test, :javascript, :stylesheet],
     :view => [:controller, :javascript, :stylesheet, :model],
     :model => [:unit_test, :fixture, :view],
-    :fixture => [:unit_test],
+    :fixture => [:unit_test, :model],
     :functional_test => [:controller],
     :unit_test => [:model, :helper],
     :javascript => [:helper, :controller],
@@ -94,6 +95,7 @@ class RailsPath
     when :unit_test  then name.sub!(/_test$/, '')
     when :view       then name = dirname.split('/').pop
     when :functional_test then name.sub!(/_controller_test$/, '')
+    when :fixture    then Inflector.singularize(name)
     end
     
     return name
@@ -103,11 +105,11 @@ class RailsPath
     name =
       case file_type
       when :controller, :model
-        buffer.find_method(:direction => :backwards).first rescue nil
+        buffer.find_method(:direction => :backwards).last rescue nil
       when :view
         basename
       when :functional_test
-        buffer.find_method(:direction => :backwards).first.sub('^test_', '')
+        buffer.find_method(:direction => :backwards).last.sub('^test_', '')
       else nil
       end
     
@@ -126,7 +128,7 @@ class RailsPath
   end
   
   # This is used in :file_type and :rails_path_for_view
-  VIEW_EXTENSIONS = %w( rhtml rxhtml rxml rjs erb builder )
+  VIEW_EXTENSIONS = %w( erb builder rhtml rxhtml rxml rjs )
 
   def file_type
     return @file_type if @file_type
@@ -173,25 +175,39 @@ class RailsPath
   def modules
     case file_type
     when :view
-      @tail.split('/').slice(0...-2)
+      tail.split('/').slice(0...-2)
     else
-      @tail.split('/').slice(0...-1)
+      tail.split('/').slice(0...-1)
     end
   end
   
-  def controller_name_modified_for(type)
+  def controller_name_possibles_modified_for(type)
     case type
     when :controller
       if controller_name == 'application'
         controller_name
       else
-        controller_name + '_controller'
+        [Inflector.pluralize(controller_name), Inflector.singularize(controller_name)].
+         map { |name| name + '_controller' }
       end
     when :helper     then controller_name + '_helper'
     when :functional_test then controller_name + '_controller_test'
-    when :unit_test  then controller_name + '_test'
+    when :unit_test  then Inflector.singularize(controller_name) + '_test'
+    when :model      then Inflector.singularize(controller_name)
+    when :fixture    then Inflector.pluralize(controller_name)
     else controller_name
     end
+  end
+
+  def select_controller_name(type, base_path, extn)
+    controller_names = controller_name_possibles_modified_for(type)
+    if controller_names.is_a?(Array)
+      for name in controller_names
+        return name if File.exists?(File.join(base_path, name + extn))
+      end
+      controller_names = controller_names.first
+    end
+    controller_names
   end
 
   def default_extension_for(type)
@@ -199,6 +215,7 @@ class RailsPath
     when :javascript then '.js'
     when :stylesheet then '.css'
     when :view       then '.html.erb'
+    when :fixture    then '.yml'
     else '.rb'
     end
   end
@@ -206,7 +223,10 @@ class RailsPath
   def rails_path_for(type)
     return rails_path_for_view if type == :view
     if TextMate.project_directory
-      RailsPath.new(File.join(rails_root, stubs[type], modules, controller_name_modified_for(type) + default_extension_for(type)))
+      base_path = File.join(rails_root, stubs[type], modules)
+      extn      = default_extension_for(type)
+      file_name = select_controller_name(type, base_path, extn)
+      RailsPath.new(File.join(base_path, file_name + extn))
     else
       puts "There needs to be a project associated with this file."
     end

@@ -3,18 +3,14 @@
 <plist version="1.0">
 <dict>
 	<key>content</key>
-	<string>create_table :${1:table}, :force => true do |t|
-  $0
-  t.timestamps
-  t.integer :lock_version, :null =&gt; false, :default =&gt; 0
-end</string>
+	<string>xhr :get, :${1:show}${2:, :id =&gt; ${3:1}}$0</string>
 	<key>name</key>
-	<string>Create Table</string>
+	<string>xhr get</string>
 	<key>scope</key>
 	<string>source.ruby.rails</string>
 	<key>tabTrigger</key>
-	<string>mtab</string>
+	<string>xget</string>
 	<key>uuid</key>
-	<string>59A47C33-97C5-411D-ADBE-ABD2324BD130</string>
+	<string>78FCF992-D01B-404F-BC54-5EE7B91F999A</string>
 </dict>
 </plist>

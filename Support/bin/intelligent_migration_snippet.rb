@@ -36,9 +36,8 @@ marcc$0',
 
   'create_drop_table' =>
     { :up   => 'create_table :${1:table_name}, :force => true do |t|
-  mccc$0
+  t.$0
   t.timestamps
-  t.integer :lock_version, :null => false, :default => 0
 end',
       :down => 'drop_table :$1' },
 
@@ -47,8 +46,8 @@ end',
       :down => 'remove_index :$1, :$2' },
 
   'add_remove_unique_index' =>
-    { :up   => 'add_index :${1:table_name}, [:${2:column_name}${3:, :${4:column_name}}], :unique => true$0',
-      :down => 'remove_index :$1, :column => :$2' },
+    { :up   => 'add_index :${1:table_name}, ${2:[:${3:column_name}${4:, :${5:column_name}}]}, :unique => true$0',
+      :down => 'remove_index :$1, :column => $2' },
 
   'add_remove_named_index' =>
     { :up   => 'add_index :${1:table_name}, [:${2:column_name}${3:, :${4:column_name}}], :name => "${5:index_name}"${6:, :unique => true}$0',

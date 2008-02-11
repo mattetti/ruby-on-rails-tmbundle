@@ -49,7 +49,7 @@ if self_down = buffer.find { /^(\s*)def\s+self\.down\b/ }
           TextMate.exit_show_tool_tip
         end
       else
-        insert_text = unprepend(schema.buffer.lines[insert_text[1]..insert_text_end[1]], insert_text_indentation)
+        insert_text = unprepend(schema.buffer.lines[insert_text[0]..insert_text_end[0]], insert_text_indentation)
         buffer.lines.insert self_down[0] + 1, prepend(insert_text + "\n", indentation + "  ")
       end
       print buffer.lines.join.gsub(/\[press tab twice to generate (create_table|add_column)\]/, "")
