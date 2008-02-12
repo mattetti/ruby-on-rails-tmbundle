@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>content</key>
+	<string>&lt;%= f.hidden_field :${1:attribute} %&gt;</string>
+	<key>name</key>
+	<string>form_for hidden_field</string>
+	<key>scope</key>
+	<string>text.html.ruby</string>
+	<key>tabTrigger</key>
+	<string>f.</string>
+	<key>uuid</key>
+	<string>5DBA8F72-DD6C-4CBF-83FD-76301E159BA9</string>
+</dict>
+</plist>
